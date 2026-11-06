@@ -1060,7 +1060,7 @@
         <td class="is-name">${api_ ? `<a class="ag-name" href="${esc(base)}" target="_blank" rel="noopener">` : `<a class="ag-name" href="#" data-open-account="${esc(r.id)}">`}${agThumb(id, r.coverPhotoId, r.name)}<span><strong>${esc(r.name)}</strong>${!api_ && r.org && r.org !== r.name ? `<small class="sub" style="display:block">${esc(r.org)}</small>` : ''}</span></a></td>
         <td class="is-stage" data-label="Estado">${agStagePill(r.stage, cfg)}</td>
         <td class="is-demo" data-label="Demo">${demo}</td>
-        <td class="is-account" data-label="Cuenta">${accountPill(AG.accountState(r), cfg)}</td>
+        ${api_ ? `<td class="is-account" data-label="Cuenta">${accountPill(AG.accountState(r), cfg)}</td>` : ''}
         ${api_ ? `<td class="n is-props" data-label="Propiedades">${int(r.properties)}</td>` : `<td class="is-phone" data-label="Teléfono">${r.phone ? `<span class="ag-phone" title="${esc(r.zone || '')}">${esc(r.phone)}</span>` : '—'}</td>`}
         <td class="is-score" data-label="${api_ ? 'Lead score' : 'Mensajes'}">${api_ ? scorePill(r.score) : `<span class="ag-msgs"><span class="ag-pill">${int(r.touches)} / ${int(u.maxTouches || 3)}</span>${audioCheck(r, u)}</span>`}</td>
         <td class="is-when" data-label="Actividad">${r.lastActivity ? `<span class="ag-when">${esc(AG.agoText(r.lastActivity.at))}<small>${esc(r.lastActivity.text)}</small></span>` : '—'}</td>
@@ -1076,7 +1076,7 @@
       ? (d.rows.length ? `<p class="empty">No hay ${esc(cfg.many)} con estos filtros.</p>` : `<section class="card glass"><h2>Todavía no hay inmobiliarias</h2><p class="sub">Creá la primera: alcanza con su nombre comercial.</p><a class="btn primary" href="${esc(app)}/admin/inmobiliarias/nueva" target="_blank" rel="noopener">+ Nueva inmobiliaria</a></section>`)
       : `<section class="card glass ag-list"><div class="table-wrap"><table class="ag-table"><thead><tr>
           <th>${esc(cfg.one[0].toUpperCase() + cfg.one.slice(1))}</th><th><span title="${esc(cfg.stages.map((k) => cfg.stageStep[k]).join(' → '))}. Surge de los hechos registrados.">Estado comercial ⓘ</span></th>
-          <th><span title="${api_ ? 'La última demo creada en el período y el paso más alto del funnel que alcanzaron sus demos.' : 'Hasta dónde llegó su demo (/p/…) y cuándo se la mandamos.'}">Demo ⓘ</span></th><th>${esc(cfg.accountTitle)}</th>${api_ ? '<th class="n">Propiedades</th>' : '<th>Teléfono</th>'}
+          <th><span title="${api_ ? 'La última demo creada en el período y el paso más alto del funnel que alcanzaron sus demos.' : 'Hasta dónde llegó su demo (/p/…) y cuándo se la mandamos.'}">Demo ⓘ</span></th>${api_ ? `<th>${esc(cfg.accountTitle)}</th><th class="n">Propiedades</th>` : '<th>Teléfono</th>'}
           <th>${api_ ? sortHead('score', 'Lead score ⓘ', 'Engagement de visitantes externos con sus demos (0 a 100). No es probabilidad de compra. Tocá para ordenar.') : 'Mensajes'}</th><th>${sortHead('actividad', 'Última actividad')}</th><th>Acciones</th>
         </tr></thead><tbody>${rowsHtml}</tbody></table></div>
         ${v.pages > 1 ? `<nav class="ag-pages" aria-label="Páginas">${v.page > 1 ? `<button type="button" class="btn small" data-ag-set="${set({ pagina: String(v.page - 1) })}">Anterior</button>` : '<span></span>'}<span class="sub">Página ${int(v.page)} de ${int(v.pages)} · ${int(v.shown.length)} ${esc(cfg.many)}</span>${v.page < v.pages ? `<button type="button" class="btn small" data-ag-set="${set({ pagina: String(v.page + 1) })}">Siguiente</button>` : '<span></span>'}</nav>` : ''}</section>`;

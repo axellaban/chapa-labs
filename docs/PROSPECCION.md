@@ -59,9 +59,9 @@ La misma vista de Facu, para Turnia, armada con sus cuentas (no hace falta nada 
 
 - **Embudo de su demo** (`/p/<código>`), los mismos seis pasos y definiciones que el «Embudo contra la meta» (se calculan con las mismas funciones, `targets` de `units.js`, y un test lo verifica): saludos enviados → demos enviadas → abrieron la demo → hablaron con Sofi → llamada agendada → Clientes Fundadores, en barras partidas que filtran la lista. El período es por el primer contacto (la misma cohorte). Los fijos sin respuesta no cuentan.
 - **Etapas**: por contactar, saludado, demo enviada, interactuó (abrió, probó, habló con Sofi o respondió), llamada agendada, cliente y cerrado.
-- **Cada fila**: estado, demo (Armada → «Enviada» registra el saludo, si faltaba, y la demo, como el registro en lote), cuenta de Turnia (creada / activa), zona, mensajes (de 3) y última actividad. Acciones: WhatsApp (abre el mensaje que le toca y después pregunta si salió, como en Hoy), copiar su demo, su ficha y «⋯».
+- **Cada fila**: estado, demo (Armada → «Enviada» registra el saludo, si faltaba, y la demo, como el registro en lote), teléfono, mensajes (de 3) y última actividad. Acciones: WhatsApp (abre el mensaje que le toca y después pregunta si salió, como en Hoy), copiar su demo, su ficha y «⋯».
 
-- **Teléfono y audio (06/11):** la columna «Zona» pasó a ser «Teléfono» (la zona queda al pasar el mouse). En «Mensajes», «🎤 Audio» registra con dos toques que le mandaste un audio desde el celular: cuenta como mensaje, salvo que ese día ya haya salido uno, y queda la fecha en «Audio enviado» de la planilla de Turnia (🎤 ✓). No aparece si ya usó los tres mensajes o no tiene WhatsApp.
+- **Teléfono y audio (06/11):** la columna «Zona» pasó a ser «Teléfono» (la zona queda al pasar el mouse). En «Mensajes», «🎤 Audio» registra con dos toques que le mandaste un audio desde el celular: cuenta como mensaje, salvo que ese día ya haya salido uno, y queda la fecha en «Audio enviado» de la planilla de Turnia (🎤 ✓). No aparece si ya usó los tres mensajes o no tiene WhatsApp. La columna «Cuenta Turnia» se sacó para que la tabla respire: si es cliente lo dice el estado, y la cuenta (creada / activa) se sigue filtrando en «Filtrar» y se ve en la ficha.
 
 Las etapas y los pasos están en `prospecting/agencies.js` (`TURNIA`), junto a los de habita. (`HABITA`).
 
