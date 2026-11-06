@@ -1086,14 +1086,14 @@
     return head + funnel + review + toolbar + scope + table + recalc;
   }
   // Turnia: tilde rápido de «le mandé un audio» desde el celular. Cuenta como mensaje (salvo que ese día ya
-  // haya salido uno) y queda en «Audio enviado». Dos toques: el primero pregunta si salió.
+  // haya salido uno) y queda en «Audio enviado». Con un toque alcanza.
   function audioCheck(r, u) {
     if (r.audioAt) return `<span class="ag-chip is-done ag-audio" title="Audio enviado ${esc(AG.agoText(r.audioAt))}">🎤 ✓</span>`;
     // Sin WhatsApp no corresponde. Con los tres mensajes usados, solo si el último salió hoy: el audio va con
     // ese mensaje (no suma otro), como cuando mandás el texto con el botón y después el audio desde el celular.
     if (!u.canMessage(r)) return '';
     if (r.touches >= (u.maxTouches || 3) && r.lastContactDay !== C.today()) return '';
-    return `<button type="button" class="ag-chip ag-audio" data-ag-audio="${esc(r.id)}" data-arm="¿Salió? Tocá otra vez" title="Registrar que le mandaste un audio por WhatsApp">🎤 Audio</button>`;
+    return `<button type="button" class="ag-chip ag-audio" data-ag-audio="${esc(r.id)}" title="Registrar que le mandaste un audio por WhatsApp (un toque)">🎤 Audio</button>`;
   }
   // Los menús (estado de la demo y «⋯») van en una capa propia: dentro del vidrio de una tarjeta,
   // un elemento fijo queda encerrado en ella.
@@ -1662,7 +1662,7 @@
     if (ds.agCopy !== undefined) { copy(ds.agCopy); return; }
     if (ds.agAudio) {
       if (state.demo) { toast('En el ejemplo no se cambia nada.', true); return; }
-      await act(ds.agAudio, { type: 'sent', channel: 'whatsapp', format: 'audio' }, { label: 'Audio registrado' });
+      await act(ds.agAudio, { type: 'sent', channel: 'whatsapp', format: 'audio' }, { label: 'Audio registrado', undoable: true });
       return;
     }
     if (ds.agWaAccount) {
