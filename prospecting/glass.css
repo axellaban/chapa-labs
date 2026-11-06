@@ -534,10 +534,25 @@ button.chip:hover { background: var(--glass-strong); }
 .ag-stage.is-panel { background: rgba(22, 112, 106, 0.15); color: #16706a; }
 .ag-stage.is-client, .ag-account.is-active, .ag-score.is-hot { background: var(--ag-green-soft); color: var(--ag-green); }
 .ag-score.is-none { color: var(--muted); }
-:root[data-theme="dark"] .ag-stage.is-contacted, :root[data-theme="dark"] .ag-score.is-warm { color: #f0b860; }
+/* Modo oscuro: los textos de las píldoras, más claros para que se lean sobre el vidrio. */
+:root[data-theme="dark"] .ag-stage.is-contacted { color: #f0b860; }
+:root[data-theme="dark"] .ag-score.is-warm { color: #f0b860; }
 :root[data-theme="dark"] .ag-stage.is-demo_sent { color: #8fb4f0; }
+:root[data-theme="dark"] .ag-step.is-step-1 { color: #8fb4f0; }
 :root[data-theme="dark"] .ag-stage.is-interacted { color: #c39be6; }
+:root[data-theme="dark"] .ag-step.is-step-3 { color: #c39be6; }
 :root[data-theme="dark"] .ag-stage.is-panel { color: #6fd1c8; }
+:root[data-theme="dark"] .ag-step.is-step-2 { color: #6fd1c8; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ag-stage.is-contacted { color: #f0b860; }
+  :root:not([data-theme="light"]) .ag-score.is-warm { color: #f0b860; }
+  :root:not([data-theme="light"]) .ag-stage.is-demo_sent { color: #8fb4f0; }
+  :root:not([data-theme="light"]) .ag-step.is-step-1 { color: #8fb4f0; }
+  :root:not([data-theme="light"]) .ag-stage.is-interacted { color: #c39be6; }
+  :root:not([data-theme="light"]) .ag-step.is-step-3 { color: #c39be6; }
+  :root:not([data-theme="light"]) .ag-stage.is-panel { color: #6fd1c8; }
+  :root:not([data-theme="light"]) .ag-step.is-step-2 { color: #6fd1c8; }
+}
 .ag-demo { position: relative; display: grid; gap: 3px; justify-items: start; }
 .ag-demo small, .ag-when small { display: block; font-size: 12px; color: var(--muted); }
 .ag-step { padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; background: rgba(120, 130, 120, 0.14); color: var(--ink-2); border: 1px solid transparent; }
