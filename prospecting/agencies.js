@@ -60,11 +60,14 @@
 
   function filterRows(rows, f, now = Date.now()) {
     const q = String(f.q || '').trim().toLowerCase();
+    // Con números (por ejemplo, los últimos 4 del teléfono) busca también en el teléfono, sin espacios ni guiones.
+    const qDigits = /^[\d\s()+.-]+$/.test(q) ? q.replace(/\D/g, '') : '';
+    const digits = (r) => String(r.phone || r.wa || '').replace(/\D/g, '');
     const since = f.days ? now - f.days * 86400000 : null;
     return rows
       .filter((r) =>
         (!f.stage || r.stage === f.stage) &&
-        (!q || r.name.toLowerCase().includes(q)) &&
+        (!q || r.name.toLowerCase().includes(q) || String(r.org || '').toLowerCase().includes(q) || (qDigits.length >= 3 && digits(r).includes(qDigits))) &&
         (!f.account || accountState(r) === f.account) &&
         (f.minScore === null || f.minScore === undefined || (r.score ?? -1) >= f.minScore) &&
         (since === null || (r.lastActivity !== null && r.lastActivity !== undefined && new Date(r.lastActivity.at).getTime() >= since)))

@@ -1029,7 +1029,7 @@
     ].join('');
     const opt = (val, label, cur) => `<option value="${val}" ${String(cur ?? '') === String(val) ? 'selected' : ''}>${label}</option>`;
     const toolbar = `<section class="card glass ag-toolbar"><div class="chips ag-tabs" role="group" aria-label="Etapa comercial">${tabs}</div>
-      <div class="toolbar"><input class="input search" type="search" placeholder="Buscar ${esc(cfg.one)}…" aria-label="Buscar ${esc(cfg.one)}" value="${esc(f.q)}" data-ag-search>
+      <div class="toolbar"><input class="input search" type="search" placeholder="Buscar por nombre o teléfono…" aria-label="Buscar ${esc(cfg.one)} por nombre o teléfono" value="${esc(f.q)}" data-ag-search>
         <details class="ag-filter" ${filtering ? 'open' : ''}><summary class="btn small">Filtrar${filtering ? ' ·' : ''}</summary>
           <form class="ag-filter-form" data-ag-filters>
             <label class="field">${esc(cfg.accountTitle)}<select class="input" name="cuenta">${opt('', 'Todas', f.account && AG.ACCOUNT_PARAM[f.account])}${opt('sin-cuenta', cfg.accountLabel.none, f.account && AG.ACCOUNT_PARAM[f.account])}${opt('registrada', cfg.accountLabel.registered, f.account && AG.ACCOUNT_PARAM[f.account])}${opt('activa', cfg.accountActive, f.account && AG.ACCOUNT_PARAM[f.account])}</select></label>

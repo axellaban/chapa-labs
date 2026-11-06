@@ -109,3 +109,12 @@ test('Turnia: el embudo de Odontólogos cuenta lo mismo que el Embudo contra la 
     assert.deepEqual(v.funnel.map((x) => x.count), tf.steps.map((s) => s.actual));
   }
 });
+
+test('la búsqueda encuentra por los últimos números del teléfono', () => {
+  const rows = [row('a', { name: 'Dra. Mangiaterra', phone: '+54 9 223 512-3456' }), row('b', { name: 'Dr. Pérez', phone: '223 000-1114' })];
+  const ids = (q) => A.filterRows(rows, { q }, NOW).map((r) => r.id);
+  assert.deepEqual(ids('3456'), ['a']);
+  assert.deepEqual(ids('000-1114'), ['b']);
+  assert.deepEqual(ids('mangi'), ['a']);
+  assert.deepEqual(ids('12'), []); // con menos de 3 números no busca en el teléfono
+});
