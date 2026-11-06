@@ -717,6 +717,14 @@
         ev(action.outcome, { channel: action.channel || '', detail: action.detail || '' });
         break;
       }
+      case 'unaudio': {
+        // El audio se había marcado por error. En Turnia lo resuelve su API (descuenta el mensaje si lo sumó);
+        // acá solo se borra la marca.
+        if (!a.audioAt) throw new Error('No hay un audio para desmarcar.');
+        patch.audioAt = '';
+        ev('audio_desmarcado');
+        break;
+      }
       case 'demo': {
         const k = action.tried ? 'demoTried' : 'demoOpened';
         if (!a[k]) patch[k] = at;

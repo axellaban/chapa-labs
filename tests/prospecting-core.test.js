@@ -370,3 +370,11 @@ test('un audio mandado a mano cuenta como mensaje, salvo que ese día ya haya sa
   assert.equal(r.patch.touches, undefined);
   assert.equal(r.patch.audioAt, '2026-11-06 19:30');
 });
+
+test('desmarcar un audio borra la marca y deja la historia', () => {
+  const a = { id: 'ana', name: 'Ana', stage: 'contactado', touches: 2, audioAt: '2026-11-06 19:30' };
+  const r = C.applyAction(a, { type: 'unaudio' }, { unit: turnia, now: '2026-11-06 19:31', by: 'Axel' });
+  assert.equal(r.patch.audioAt, '');
+  assert.equal(r.events[0].type, 'audio_desmarcado');
+  assert.throws(() => C.applyAction({ ...a, audioAt: '' }, { type: 'unaudio' }, { unit: turnia, by: 'Axel' }));
+});

@@ -1088,7 +1088,8 @@
   // Turnia: tilde rápido de «le mandé un audio» desde el celular. Cuenta como mensaje (salvo que ese día ya
   // haya salido uno) y queda en «Audio enviado». Con un toque alcanza.
   function audioCheck(r, u) {
-    if (r.audioAt) return `<span class="ag-chip is-done ag-audio" title="Audio enviado ${esc(AG.agoText(r.audioAt))}">🎤 ✓</span>`;
+    // Ya marcado: tocarlo lo desmarca (si fue por error). Si ese audio había sumado un mensaje, se descuenta.
+    if (r.audioAt) return `<button type="button" class="ag-chip is-done ag-audio" data-ag-unaudio="${esc(r.id)}" title="Audio enviado ${esc(AG.agoText(r.audioAt))}. Tocá para desmarcarlo" aria-label="Desmarcar el audio enviado a ${esc(r.name)}">🎤 ✓</button>`;
     // Sin WhatsApp no corresponde. Con los tres mensajes usados, solo si el último salió hoy: el audio va con
     // ese mensaje (no suma otro), como cuando mandás el texto con el botón y después el audio desde el celular.
     if (!u.canMessage(r)) return '';
@@ -1366,7 +1367,7 @@
 
   function eventLabel(e, u) {
     const tpls = templatesOf(u.id);
-    const labels = { cuenta: 'Cuenta', saludo: 'Saludo enviado', mensaje: 'Mensaje enviado', llamada: 'Llamada', visita: 'Visita', respondio: 'Respondió', interesado: 'Interesado', reunion: 'Reunión', cliente: 'Cliente', perdido: u.stageLabel('perdido'), invalido: u.stageLabel('invalido'), baja: 'Pidió no recibir más', abrio_demo: 'Abrió la demo', probo_demo: 'Probó la demo', proximo: 'Agendado', nota: 'Nota', edicion: 'Datos editados', deshacer: 'Deshecho', reabrir: 'Reabierta' };
+    const labels = { cuenta: 'Cuenta', saludo: 'Saludo enviado', mensaje: 'Mensaje enviado', llamada: 'Llamada', visita: 'Visita', respondio: 'Respondió', interesado: 'Interesado', reunion: 'Reunión', cliente: 'Cliente', perdido: u.stageLabel('perdido'), invalido: u.stageLabel('invalido'), baja: 'Pidió no recibir más', abrio_demo: 'Abrió la demo', probo_demo: 'Probó la demo', proximo: 'Agendado', nota: 'Nota', edicion: 'Datos editados', deshacer: 'Deshecho', audio_desmarcado: 'Audio desmarcado', reabrir: 'Reabierta' };
     const base = labels[e.type] || e.type;
     return e.template && tpls[e.template] ? `${base} (${tpls[e.template].title})` : base;
   }
@@ -1662,7 +1663,12 @@
     if (ds.agCopy !== undefined) { copy(ds.agCopy); return; }
     if (ds.agAudio) {
       if (state.demo) { toast('En el ejemplo no se cambia nada.', true); return; }
-      await act(ds.agAudio, { type: 'sent', channel: 'whatsapp', format: 'audio' }, { label: 'Audio registrado', undoable: true });
+      await act(ds.agAudio, { type: 'sent', channel: 'whatsapp', format: 'audio' }, { label: 'Audio registrado · tocá 🎤 ✓ para desmarcarlo' });
+      return;
+    }
+    if (ds.agUnaudio) {
+      if (state.demo) { toast('En el ejemplo no se cambia nada.', true); return; }
+      await act(ds.agUnaudio, { type: 'unaudio' }, { label: 'Audio desmarcado' });
       return;
     }
     if (ds.agWaAccount) {
