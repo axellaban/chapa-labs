@@ -118,3 +118,13 @@ test('la búsqueda encuentra por los últimos números del teléfono', () => {
   assert.deepEqual(ids('mangi'), ['a']);
   assert.deepEqual(ids('12'), []); // con menos de 3 números no busca en el teléfono
 });
+
+test('el tercer mensaje y su audio el mismo día: el audio no suma un cuarto', () => {
+  const C = require('../prospecting/core');
+  const { turnia } = require('../prospecting/units').UNITS;
+  const a = { id: 'mb', name: 'María', stage: 'contactado', touches: 3, firstContact: '2026-11-02 10:00', lastContact: '2026-11-06 18:40' };
+  assert.equal(A.fromAccounts([a])[0].lastContactDay, '2026-11-06');
+  const r = C.applyAction(a, { type: 'sent', channel: 'whatsapp', format: 'audio' }, { unit: turnia, now: '2026-11-06 18:45', by: 'Axel' });
+  assert.equal(r.patch.touches, undefined);
+  assert.equal(r.patch.audioAt, '2026-11-06 18:45');
+});

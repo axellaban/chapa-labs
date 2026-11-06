@@ -263,6 +263,8 @@
         score: null, touches: a.touches || 0, lastActivity: facts[0] || null,
         createdAt: iso(a.firstContact) || iso(a.greetingSent) || '2000-01-01T00:00:00.000Z',
         test: false, phone: a.phone, phoneKind: a.phoneKind, demoUrl: a.demoUrl || '', audioAt: iso(a.audioAt) || '',
+        // Día (hora local) del último mensaje: un audio ese mismo día va con ese mensaje y no suma otro.
+        lastContactDay: /^\d{4}-\d{2}-\d{2}/.test(String(a.lastContact || '')) ? String(a.lastContact).slice(0, 10) : '',
         // En el embudo entra desde el saludo, con la fecha del primer contacto (la cohorte del Embudo).
         demos: step >= 0 ? [{ id: a.id, sent, createdAt: iso(a.firstContact), step }] : [],
       };

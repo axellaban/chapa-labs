@@ -1089,8 +1089,10 @@
   // haya salido uno) y queda en «Audio enviado». Dos toques: el primero pregunta si salió.
   function audioCheck(r, u) {
     if (r.audioAt) return `<span class="ag-chip is-done ag-audio" title="Audio enviado ${esc(AG.agoText(r.audioAt))}">🎤 ✓</span>`;
-    // Sin WhatsApp o con los tres mensajes ya usados, no corresponde otro.
-    if (!u.canMessage(r) || r.touches >= (u.maxTouches || 3)) return '';
+    // Sin WhatsApp no corresponde. Con los tres mensajes usados, solo si el último salió hoy: el audio va con
+    // ese mensaje (no suma otro), como cuando mandás el texto con el botón y después el audio desde el celular.
+    if (!u.canMessage(r)) return '';
+    if (r.touches >= (u.maxTouches || 3) && r.lastContactDay !== C.today()) return '';
     return `<button type="button" class="ag-chip ag-audio" data-ag-audio="${esc(r.id)}" data-arm="¿Salió? Tocá otra vez" title="Registrar que le mandaste un audio por WhatsApp">🎤 Audio</button>`;
   }
   // Los menús (estado de la demo y «⋯») van en una capa propia: dentro del vidrio de una tarjeta,
