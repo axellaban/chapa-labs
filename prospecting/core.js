@@ -42,6 +42,7 @@
     ['firstContact', 'Primer contacto', /^(primer contacto|fecha (de )?env[ií]o|fecha)$/i],
     ['lastContact', 'Último contacto', /^[uú]ltimo contacto/i],
     ['lastChannel', 'Último canal', /^([uú]ltimo canal|canal)$/i],
+    ['audioAt', 'Audio enviado', /^audio enviado$/i],
     ['demoUrl', 'Demo', /^(demo|link de su demo|link demo|link de la demo)$/i],
     ['demoOpened', 'Abrió la demo', /^abri[oó] (su |la )?demo/i],
     ['demoTried', 'Probó la demo', /^prob[oó] (su |la )?demo/i],
@@ -68,7 +69,7 @@
   const FIELD_KEYS = FIELDS.map(([k]) => k);
 
   // Columnas que el panel escribe: si la planilla no las tiene, «Preparar planilla» las agrega al final.
-  const WRITABLE = ['id', 'stage', 'nextStep', 'nextAt', 'touches', 'firstContact', 'lastContact', 'lastChannel', 'demoOpened', 'demoTried', 'replied', 'interested', 'meeting', 'customer', 'lostReason', 'optOut', 'notes', 'updated'];
+  const WRITABLE = ['id', 'stage', 'nextStep', 'nextAt', 'touches', 'firstContact', 'lastContact', 'lastChannel', 'audioAt', 'demoOpened', 'demoTried', 'replied', 'interested', 'meeting', 'customer', 'lostReason', 'optOut', 'notes', 'updated'];
   // Lo que se puede editar a mano desde la ficha.
   const EDITABLE = ['name', 'org', 'greeting', 'phone', 'phoneKind', 'email', 'instagram', 'web', 'zone', 'segment', 'priority', 'sdr', 'campaign', 'demoUrl', 'nextStep', 'nextAt', 'lostReason'];
 
@@ -658,8 +659,12 @@
       case 'sent': {
         // Solo se registra cuando el equipo confirma que el mensaje salió: abrir el chat no cuenta.
         const greeting = action.kind === 'saludo';
+        // Un audio mandado a mano: si ese día ya salió un mensaje (el texto y el audio juntos), no suma otro.
+        const audio = action.format === 'audio';
+        const sameDay = audio && Boolean(a.lastContact) && String(a.lastContact).slice(0, 10) === day;
+        if (audio) patch.audioAt = at;
         // Los mensajes de una conversación en curso no cuentan como pasos de la secuencia.
-        const touches = greeting || level(a) >= 2 ? a.touches : (a.touches || 0) + 1;
+        const touches = greeting || sameDay || level(a) >= 2 ? a.touches : (a.touches || 0) + 1;
         if (!a.firstContact) patch.firstContact = at;
         patch.lastContact = at;
         patch.lastChannel = action.channel || 'whatsapp';

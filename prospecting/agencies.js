@@ -252,14 +252,14 @@
       const stage = client ? 'client' : isClosed ? 'closed' : call ? 'call' : chat || opened || a.replied ? 'interacted' : sent ? 'demo_sent' : a.greetingSent || a.firstContact ? 'contacted' : 'prospect';
       const facts = [
         [a.clientAt || a.customer, 'Cliente Fundador'], [a.meeting, 'Llamada agendada'], [a.accountAt, 'Creó su cuenta'], [a.demoChat, 'Habló con Sofi'],
-        [a.demoTried, 'Probó la demo'], [a.demoOpened, 'Abrió la demo'], [a.replied, 'Respondió'], [a.lastContact, 'Le escribimos'], [a.greetingSent, 'Saludo enviado'],
+        [a.demoTried, 'Probó la demo'], [a.demoOpened, 'Abrió la demo'], [a.replied, 'Respondió'], [a.audioAt, 'Le mandamos un audio'], [a.lastContact, 'Le escribimos'], [a.greetingSent, 'Saludo enviado'],
       ].filter(([d]) => isDate(d)).map(([d, text]) => ({ at: iso(d), text })).filter((x) => x.at).sort((x, y) => y.at.localeCompare(x.at));
       return {
         id: a.id, name: a.name, org: a.org, zone: a.zone, coverPhotoId: null, stage, step: Math.max(0, step),
         hasOwner: isDate(a.accountAt), subscribed: isDate(a.accountActive), client,
         score: null, touches: a.touches || 0, lastActivity: facts[0] || null,
         createdAt: iso(a.firstContact) || iso(a.greetingSent) || '2000-01-01T00:00:00.000Z',
-        test: false, phone: a.phone, phoneKind: a.phoneKind, demoUrl: a.demoUrl || '',
+        test: false, phone: a.phone, phoneKind: a.phoneKind, demoUrl: a.demoUrl || '', audioAt: iso(a.audioAt) || '',
         // En el embudo entra desde el saludo, con la fecha del primer contacto (la cohorte del Embudo).
         demos: step >= 0 ? [{ id: a.id, sent, createdAt: iso(a.firstContact), step }] : [],
       };

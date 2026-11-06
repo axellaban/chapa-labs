@@ -1061,8 +1061,8 @@
         <td class="is-stage" data-label="Estado">${agStagePill(r.stage, cfg)}</td>
         <td class="is-demo" data-label="Demo">${demo}</td>
         <td class="is-account" data-label="Cuenta">${accountPill(AG.accountState(r), cfg)}</td>
-        ${api_ ? `<td class="n is-props" data-label="Propiedades">${int(r.properties)}</td>` : `<td class="is-props" data-label="Zona">${esc(r.zone || '—')}</td>`}
-        <td class="is-score" data-label="${api_ ? 'Lead score' : 'Mensajes'}">${api_ ? scorePill(r.score) : `<span class="ag-pill">${int(r.touches)} / ${int(u.maxTouches || 3)}</span>`}</td>
+        ${api_ ? `<td class="n is-props" data-label="Propiedades">${int(r.properties)}</td>` : `<td class="is-phone" data-label="Teléfono">${r.phone ? `<span class="ag-phone" title="${esc(r.zone || '')}">${esc(r.phone)}</span>` : '—'}</td>`}
+        <td class="is-score" data-label="${api_ ? 'Lead score' : 'Mensajes'}">${api_ ? scorePill(r.score) : `<span class="ag-msgs"><span class="ag-pill">${int(r.touches)} / ${int(u.maxTouches || 3)}</span>${audioCheck(r, u)}</span>`}</td>
         <td class="is-when" data-label="Actividad">${r.lastActivity ? `<span class="ag-when">${esc(AG.agoText(r.lastActivity.at))}<small>${esc(r.lastActivity.text)}</small></span>` : '—'}</td>
         <td class="is-actions">${wa}
           ${api_ ? `<button type="button" class="ag-chip" data-ag-link="demo" data-id="${esc(r.id)}" ${r.shareDemo ? '' : 'disabled title="Todavía no tiene una demo publicada"'}>🔗 <span>Demo</span></button>
@@ -1076,7 +1076,7 @@
       ? (d.rows.length ? `<p class="empty">No hay ${esc(cfg.many)} con estos filtros.</p>` : `<section class="card glass"><h2>Todavía no hay inmobiliarias</h2><p class="sub">Creá la primera: alcanza con su nombre comercial.</p><a class="btn primary" href="${esc(app)}/admin/inmobiliarias/nueva" target="_blank" rel="noopener">+ Nueva inmobiliaria</a></section>`)
       : `<section class="card glass ag-list"><div class="table-wrap"><table class="ag-table"><thead><tr>
           <th>${esc(cfg.one[0].toUpperCase() + cfg.one.slice(1))}</th><th><span title="${esc(cfg.stages.map((k) => cfg.stageStep[k]).join(' → '))}. Surge de los hechos registrados.">Estado comercial ⓘ</span></th>
-          <th><span title="${api_ ? 'La última demo creada en el período y el paso más alto del funnel que alcanzaron sus demos.' : 'Hasta dónde llegó su demo (/p/…) y cuándo se la mandamos.'}">Demo ⓘ</span></th><th>${esc(cfg.accountTitle)}</th>${api_ ? '<th class="n">Propiedades</th>' : '<th>Zona</th>'}
+          <th><span title="${api_ ? 'La última demo creada en el período y el paso más alto del funnel que alcanzaron sus demos.' : 'Hasta dónde llegó su demo (/p/…) y cuándo se la mandamos.'}">Demo ⓘ</span></th><th>${esc(cfg.accountTitle)}</th>${api_ ? '<th class="n">Propiedades</th>' : '<th>Teléfono</th>'}
           <th>${api_ ? sortHead('score', 'Lead score ⓘ', 'Engagement de visitantes externos con sus demos (0 a 100). No es probabilidad de compra. Tocá para ordenar.') : 'Mensajes'}</th><th>${sortHead('actividad', 'Última actividad')}</th><th>Acciones</th>
         </tr></thead><tbody>${rowsHtml}</tbody></table></div>
         ${v.pages > 1 ? `<nav class="ag-pages" aria-label="Páginas">${v.page > 1 ? `<button type="button" class="btn small" data-ag-set="${set({ pagina: String(v.page - 1) })}">Anterior</button>` : '<span></span>'}<span class="sub">Página ${int(v.page)} de ${int(v.pages)} · ${int(v.shown.length)} ${esc(cfg.many)}</span>${v.page < v.pages ? `<button type="button" class="btn small" data-ag-set="${set({ pagina: String(v.page + 1) })}">Siguiente</button>` : '<span></span>'}</nav>` : ''}</section>`;
@@ -1084,6 +1084,14 @@
     state.agRows = new Map(v.items.map((r) => [r.id, { r, step: v.per.get(r.id).step, app }]));
     queueMicrotask(agPop);
     return head + funnel + review + toolbar + scope + table + recalc;
+  }
+  // Turnia: tilde rápido de «le mandé un audio» desde el celular. Cuenta como mensaje (salvo que ese día ya
+  // haya salido uno) y queda en «Audio enviado». Dos toques: el primero pregunta si salió.
+  function audioCheck(r, u) {
+    if (r.audioAt) return `<span class="ag-chip is-done ag-audio" title="Audio enviado ${esc(AG.agoText(r.audioAt))}">🎤 ✓</span>`;
+    // Sin WhatsApp o con los tres mensajes ya usados, no corresponde otro.
+    if (!u.canMessage(r) || r.touches >= (u.maxTouches || 3)) return '';
+    return `<button type="button" class="ag-chip ag-audio" data-ag-audio="${esc(r.id)}" data-arm="¿Salió? Tocá otra vez" title="Registrar que le mandaste un audio por WhatsApp">🎤 Audio</button>`;
   }
   // Los menús (estado de la demo y «⋯») van en una capa propia: dentro del vidrio de una tarjeta,
   // un elemento fijo queda encerrado en ella.
@@ -1650,6 +1658,11 @@
     }
     if (ds.agWa) { openWhatsApp(ds.agWa, '¡Buenas!'); return; }
     if (ds.agCopy !== undefined) { copy(ds.agCopy); return; }
+    if (ds.agAudio) {
+      if (state.demo) { toast('En el ejemplo no se cambia nada.', true); return; }
+      await act(ds.agAudio, { type: 'sent', channel: 'whatsapp', format: 'audio' }, { label: 'Audio registrado' });
+      return;
+    }
     if (ds.agWaAccount) {
       // Turnia: el mensaje que le toca (saludo, demo o seguimiento) y después la confirmación de que salió.
       const a = findAccount(ds.agWaAccount);

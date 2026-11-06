@@ -61,6 +61,8 @@ La misma vista de Facu, para Turnia, armada con sus cuentas (no hace falta nada 
 - **Etapas**: por contactar, saludado, demo enviada, interactuó (abrió, probó, habló con Sofi o respondió), llamada agendada, cliente y cerrado.
 - **Cada fila**: estado, demo (Armada → «Enviada» registra el saludo, si faltaba, y la demo, como el registro en lote), cuenta de Turnia (creada / activa), zona, mensajes (de 3) y última actividad. Acciones: WhatsApp (abre el mensaje que le toca y después pregunta si salió, como en Hoy), copiar su demo, su ficha y «⋯».
 
+- **Teléfono y audio (06/11):** la columna «Zona» pasó a ser «Teléfono» (la zona queda al pasar el mouse). En «Mensajes», «🎤 Audio» registra con dos toques que le mandaste un audio desde el celular: cuenta como mensaje, salvo que ese día ya haya salido uno, y queda la fecha en «Audio enviado» de la planilla de Turnia (🎤 ✓). No aparece si ya usó los tres mensajes o no tiene WhatsApp.
+
 Las etapas y los pasos están en `prospecting/agencies.js` (`TURNIA`), junto a los de habita. (`HABITA`).
 
 ## Enviar con un agente de IA (`?vista=enviar`)

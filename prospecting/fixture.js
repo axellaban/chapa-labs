@@ -78,6 +78,8 @@
         ev('mensaje', { template: key });
         a.touches = s;
         a.lastContact = at(day, 10);
+        // Algunos seguimientos salieron como audio (sin tocar el azar, para no cambiar el resto del ejemplo).
+        if (unit.id === 'turnia' && s >= 2 && i % 4 === 0) a.audioAt = a.lastContact;
         a.stage = 'contactado';
         if (unit.id === 'turnia' && r() < 0.32) { a.demoOpened = at(day, 12); events.push({ at: a.demoOpened, id, account: a.name, type: 'abrio_demo', by: '' }); if (r() < 0.4) { a.demoTried = at(day, 13); a.demoClinic = a.demoTried; if (r() < 0.6) a.demoChat = at(day, 14); } }
         if (r() < (unit.id === 'turnia' ? 0.12 : 0.09)) { replied = true; break; }

@@ -523,6 +523,9 @@ button.chip:hover { background: var(--glass-strong); }
 .ag-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .ag-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; background: var(--glass-soft); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--glass-line); }
 .ag-pill i { font-style: normal; }
+.ag-msgs { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.ag-phone { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ag-chip.ag-audio { height: 28px; padding: 0 9px; font-size: 12px; }
 .ag-pill.is-alert { background: rgba(208, 59, 59, 0.14); color: var(--bad-text); }
 .ag-stage.is-prospect { background: rgba(120, 130, 120, 0.14); }
 .ag-stage.is-contacted, .ag-score.is-warm { background: rgba(232, 160, 50, 0.18); color: #8a5a12; }

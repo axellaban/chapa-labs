@@ -356,3 +356,17 @@ test('lote: arma los pasos que faltan y busca por número o por nombre', () => {
     ['no-esta', null, ''],
   ]);
 });
+
+test('un audio mandado a mano cuenta como mensaje, salvo que ese día ya haya salido uno', () => {
+  const head = ['Código', 'Nombre', 'Teléfono', 'Mensajes', 'Último contacto', 'Último canal', 'Audio enviado'];
+  assert.equal(C.mapHeaders(head).audioAt, 6);
+  const a = { id: 'ana', name: 'Ana', stage: 'contactado', touches: 1, lastContact: '2026-11-03 11:00', firstContact: '2026-11-03 11:00' };
+  let r = C.applyAction(a, { type: 'sent', channel: 'whatsapp', format: 'audio' }, { unit: turnia, now: '2026-11-06 19:30', by: 'Axel' });
+  assert.equal(r.patch.touches, 2);
+  assert.equal(r.patch.audioAt, '2026-11-06 19:30');
+  // El texto ya salió hoy: el audio que va con él no suma otro mensaje.
+  const b = { ...a, touches: 2, lastContact: '2026-11-06 19:00' };
+  r = C.applyAction(b, { type: 'sent', channel: 'whatsapp', format: 'audio' }, { unit: turnia, now: '2026-11-06 19:30', by: 'Axel' });
+  assert.equal(r.patch.touches, undefined);
+  assert.equal(r.patch.audioAt, '2026-11-06 19:30');
+});
